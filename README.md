@@ -55,20 +55,24 @@ Code goes into `/implementations/your-name/weekNN/`.
 ## Repository Structure
 
 ```
-transformer-reading-group/
+rg-transformers/
 ├── README.md                  ← this document
+├── CONTRIBUTING.md            ← how to push code, use the cluster, update the leaderboard
 ├── LEADERBOARD.md             ← auto-updated validation loss table
-├── common/
-│   ├── tokenizer.py           ← shared BPE / char-level tokenizer
-│   ├── data.py                ← shared data loading (TinyShakespeare, WikiText)
-│   └── eval.py                ← shared evaluation script (perplexity, loss)
-├── presentations/
+├── common/                    ← shared utilities (protected — PR required to modify)
+│   ├── tokenizer.py           ← shared BPE tokeniser
+│   ├── data.py                ← dataset loading (TinyShakespeare, WikiText-103)
+│   ├── eval.py                ← evaluation script — do not modify without group consensus
+│   ├── train.py               ← reference training loop
+│   └── requirements.txt       ← pinned dependencies
+├── presentations/             ← weekly seminar slides, one folder per session
 │   ├── week01-alice/
 │   │   └── slides.pdf
 │   └── week03-bob/
 │       └── slides.pdf
-└── implementations/
+└── implementations/           ← one folder per member, push freely
     ├── alice/
+    │   ├── README.md
     │   ├── week01_embeddings.py
     │   ├── week03_attention.py
     │   └── ...

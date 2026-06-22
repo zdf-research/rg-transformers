@@ -23,7 +23,7 @@
 ## Repository Structure
 
 ```
-llm-reading-group/
+rg-transformers/
 ├── README.md                        ← the curriculum and group manifesto
 ├── CONTRIBUTING.md                  ← this document
 ├── LEADERBOARD.md                   ← updated after each session
@@ -63,8 +63,8 @@ llm-reading-group/
 You do not need to fork — everyone has write access to the organisation repo. Just clone directly:
 
 ```bash
-git clone https://github.com/llm-reading-group/curriculum.git
-cd curriculum
+git clone https://github.com/zdf-research/rg-transformers.git
+cd rg-transformers
 ```
 
 ### 2. Create your implementation folder
@@ -367,7 +367,7 @@ Use Weights & Biases (free tier) or TensorBoard. A run without logs is a run tha
 
 ```python
 import wandb
-wandb.init(project="llm-reading-group", name="alice-week09-flashattn")
+wandb.init(project="zdf-research", name="alice-week09-flashattn")
 wandb.log({"train/loss": loss, "train/step": step})
 ```
 

@@ -1,0 +1,50 @@
+# .github/workflows/onboard-member.yml
+name: Onboard new member
+
+on:
+  organization:
+    types: [member_added]
+
+jobs:
+  onboard:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add member to team
+        env:
+          GH_TOKEN: ${{ secrets.ZDF_ADMIN_PAT }}
+          USERNAME: ${{ github.event.membership.member.login }}
+          ORG: zdf-research
+          TEAM: members
+        run: |
+          gh api --method PUT \
+            /orgs/$ORG/teams/$TEAM/memberships/$USERNAME \
+            -f role=member
+          echo "✓ Added $USERNAME to team $TEAM"
+
+      - name: Create member branch and scaffold
+        env:
+          USERNAME: ${{ github.event.membership.member.login }}
+        run: |
+          git checkout -b member/$USERNAME
+          mkdir -p implementations/$USERNAME
+          cat > implementations/$USERNAME/README.md << EOF
+          # $USERNAME — Implementation Notes
+
+          | Week | Val Loss | Params | Notes |
+          |------|----------|--------|-------|
+
+          EOF
+          git add implementations/$USERNAME/README.md
+          git commit -m "init: scaffold implementations/$USERNAME"
+          git push origin member/$USERNAME
+          echo "✓ Created branch member/$USERNAME"
