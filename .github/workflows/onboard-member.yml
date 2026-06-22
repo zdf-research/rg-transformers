@@ -2,8 +2,12 @@
 name: Onboard new member
 
 on:
-  organization:
-    types: [member_added]
+  workflow_dispatch:
+    inputs:
+      username:
+        description: 'GitHub username of the new member'
+        required: true
+        type: string
 
 jobs:
   onboard:
@@ -22,7 +26,7 @@ jobs:
       - name: Add member to team
         env:
           GH_TOKEN: ${{ secrets.ZDF_ADMIN_PAT }}
-          USERNAME: ${{ github.event.membership.member.login }}
+          USERNAME: ${{ github.event.inputs.username }}
           ORG: zdf-research
           TEAM: members
         run: |
@@ -33,7 +37,7 @@ jobs:
 
       - name: Create member branch and scaffold
         env:
-          USERNAME: ${{ github.event.membership.member.login }}
+          USERNAME: ${{ github.event.inputs.username }}
         run: |
           git checkout -b member/$USERNAME
           mkdir -p implementations/$USERNAME
