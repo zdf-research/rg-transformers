@@ -37,4 +37,4 @@ git commit -m "week03: add attention presentation slides"
 git push origin member/your-name
 ```
 
-Presentations can be pushed directly from your personal branch — no PR needed.
+Presentations live on your personal branch. When you are ready to archive them in `main`, open a Pull Request.

@@ -44,8 +44,8 @@ jobs:
           cat > implementations/$USERNAME/README.md << EOF
           # $USERNAME — Implementation Notes
 
-          | Week | Val Loss | Params | Notes |
-          |------|----------|--------|-------|
+          | Week | Primary Metric | Secondary Metric | Notes |
+          |------|----------------|------------------|-------|
 
           EOF
           git add implementations/$USERNAME/README.md

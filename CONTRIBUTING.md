@@ -33,7 +33,7 @@ rg-transformers/
 │   ├── data.py                      ← dataset loading (TinyShakespeare, WikiText)
 │   ├── eval.py                      ← evaluation script — do not modify without a PR
 │   ├── train.py                     ← reference training loop
-│   └── requirements.txt             ← pinned dependencies for reproducibility
+│   └── pyproject.toml               ← project metadata and pinned dependencies (managed with uv)
 │
 ├── presentations/
 │   ├── week01-alice/
@@ -58,31 +58,34 @@ rg-transformers/
 
 ## Getting Started
 
-### 1. Fork or clone the repo
+### 1. Admin onboarding
 
-You do not need to fork — everyone has write access to the organisation repo. Just clone directly:
+An admin will run the onboarding GitHub Action for you. This creates your `member/<username>` branch and scaffolds your implementation folder automatically. You do not need to create anything yourself.
+
+### 2. Clone and switch to your branch
 
 ```bash
 git clone https://github.com/zdf-research/rg-transformers.git
 cd rg-transformers
+git pull
+git switch member/your-name
 ```
 
-### 2. Create your implementation folder
+Your branch already contains `implementations/your-name/README.md`. Add a one-line description of yourself there. This becomes your project page by Week 13.
 
-Do this once, in your first week:
-
-```bash
-mkdir -p implementations/your-name
-touch implementations/your-name/README.md
-```
-
-Add a one-line description of yourself to your `README.md`. This becomes your project page by Week 12.
+> **Branch protection:** Pushing directly to `main` is disabled for everyone. All code lands via Pull Request.
 
 ### 3. Set up your environment
 
+We use `uv` for dependency management. Once the shared `pyproject.toml` is in place:
+
 ```bash
-pip install -r common/requirements.txt
+uv sync
+# or, for editable install of the local package:
+uv pip install -e .
 ```
+
+Until then, follow any setup instructions posted in the group chat.
 
 See [Environment Setup](#environment-setup) for conda/venv instructions and GPU configuration.
 
@@ -127,19 +130,19 @@ week04_transformer_block.py
 ...
 ```
 
-This makes the folder readable as a chronological project by Week 12.
+This makes the folder readable as a chronological project by Week 13.
 
-### Commit directly to main (for your own folder only)
+### Push to your member branch
 
-Since your `implementations/your-name/` folder is yours, you can commit directly to `main` for your own work:
+All your work lives on your `member/your-name` branch. Push freely — no approval needed for your own folder:
 
 ```bash
 git add implementations/your-name/week03_attention.py
 git commit -m "week03: single-head causal attention, passes sanity check"
-git push origin main
+git push origin member/your-name
 ```
 
-No PR needed. No approval needed. Just push.
+When you are ready to land code in `main` (e.g. a weekly winner merge, or a presentation), open a Pull Request.
 
 ### Keep a running README in your folder
 
@@ -147,10 +150,10 @@ Update `implementations/your-name/README.md` each week with:
 
 - What you implemented
 - Any architectural choices you made that differ from the baseline
-- Your current validation loss (copy from `eval.py` output)
+- Your current primary metric for the week
 - One thing you found surprising or confusing
 
-By Week 12 this is your project write-up, mostly already written.
+By Week 13 this is your project write-up, mostly already written.
 
 ### It is fine to push broken code
 
@@ -172,7 +175,7 @@ mkdir -p presentations/week03-your-name
 cp your_slides.pdf presentations/week03-your-name/slides.pdf
 git add presentations/week03-your-name/
 git commit -m "week03: add attention presentation slides"
-git push origin main
+git push origin member/your-name
 ```
 
 Optionally add a `notes.md` with links, extended derivations, or things you wanted to cover but ran out of time.
@@ -204,33 +207,40 @@ PR description should include: what was broken, what you changed, and a test sho
 
 ## The Leaderboard
 
-The leaderboard lives in `LEADERBOARD.md` and is updated after each session. The metric is **validation cross-entropy loss** on a fixed held-out split of WikiText-103, computed by `common/eval.py`.
+The leaderboard lives in `LEADERBOARD.md` and is updated after each session. Each week has its own metric(s) defined in [CURRICULUM.md](CURRICULUM.md). The winner is determined by the best score on the week's primary metric.
 
 ### Running the eval
 
 ```bash
+# Example for Week 6 (validation loss is the metric)
 python common/eval.py \
   --checkpoint implementations/your-name/checkpoints/week06_final.pt \
   --name "your-name" \
   --week 6
 ```
 
-This prints your loss and appends a row to a local `leaderboard_update.json`. Paste the output into the leaderboard update PR after each session, or hand it to whoever is maintaining the board that week.
+This prints your metrics. Hand the output to whoever is maintaining the board that week, or open a PR against `LEADERBOARD.md`.
 
 ### Leaderboard format
 
 ```markdown
-| Week | Name  | Val Loss | Params | Notes                        |
-| ---- | ----- | -------- | ------ | ---------------------------- |
-| 6    | alice | 1.423    | 10.7M  | SwiGLU, RoPE preview         |
-| 6    | bob   | 1.551    | 10.4M  | Vanilla FFN, learned pos emb |
+| Week | Name  | Primary Metric | Secondary Metric | Notes                        |
+| ---- | ----- | -------------- | ---------------- | ---------------------------- |
+| 6    | alice | 1.423          | 10.7M params     | SwiGLU, RoPE preview         |
+| 6    | bob   | 1.551          | 10.4M params     | Vanilla FFN, learned pos emb |
 ```
 
 ### Rules
 
 - Only submit results from the **shared eval script** on the **fixed dataset split**. Do not submit results from your own eval loop — the point is comparability.
-- Secondary metrics (params, tokens/sec, training time) are optional but encouraged from Week 7 onwards.
-- If your loss seems suspiciously good, the group will ask you to walk through your code. This is not an accusation — it is how we catch bugs (including the bug where you accidentally eval on the training set, which happens to everyone once).
+- Secondary metrics are optional but encouraged.
+- If your result seems suspiciously good, the group will ask you to walk through your code. This is not an accusation — it is how we catch bugs (including the bug where you accidentally eval on the training set, which happens to everyone once).
+
+### Weekly winner selection
+
+At the end of each session, the group reviews the leaderboard for that week. The implementation with the **best primary metric** is selected as the weekly winner. The winner opens a PR to merge their module into `group_project/`. See [CURRICULUM.md](CURRICULUM.md) for per-week metrics.
+
+In case of ambiguity (e.g. a faster but slightly less accurate model), the group votes. Clarity and correctness are tie-breakers.
 
 ---
 
@@ -240,12 +250,12 @@ This prints your loss and appends a row to a local `leaderboard_update.json`. Pa
 
 | Purpose                    | Format                     | Example                     |
 | -------------------------- | -------------------------- | --------------------------- |
-| Your weekly implementation | `impl/your-name/weekNN`    | `impl/alice/week03`         |
+| Personal work branch       | `member/your-name`         | `member/alice`              |
 | Fix to common utilities    | `fix/short-description`    | `fix/eval-bfloat16-cast`    |
 | Feature addition to common | `feat/short-description`   | `feat/wikitext-data-loader` |
-| Presentation               | just push to main directly | —                           |
+| Weekly winner merge        | `merge/weekNN-winner`      | `merge/week05-swiglou`      |
 
-You only need branches if you are touching `common/`. For your own implementation folder, push to `main` directly.
+Everyone works on a persistent `member/your-name` branch. All changes to `main` go through a Pull Request — even for your own implementation folder.
 
 ### Commit messages
 
@@ -278,9 +288,9 @@ We are all guilty of the last one on a Friday afternoon. Try anyway.
 
 ## Pull Request Rules
 
-PRs are only required for changes to `common/`. For everything else, push directly.
+All changes to `main` go through a Pull Request. This includes weekly winner merges, presentation uploads, and fixes to `common/`.
 
-### PR checklist (for common/ changes)
+### PR checklist
 
 - [ ] Describe what the change does and why in the PR description
 - [ ] Include a minimal test or usage example showing it works
@@ -296,20 +306,14 @@ When you are tagged as a reviewer, aim to respond within 48 hours. A review does
 
 ## Environment Setup
 
-### Option 1: pip + venv (simplest)
+We use [`uv`](https://docs.astral.sh/uv/) for dependency management.
+
+### Quick start (once pyproject.toml is available)
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate        # on Windows: .venv\Scripts\activate
-pip install -r common/requirements.txt
-```
-
-### Option 2: conda
-
-```bash
-conda create -n readinggroup python=3.11
-conda activate readinggroup
-pip install -r common/requirements.txt
+uv sync
+# or, for an editable install:
+uv pip install -e .
 ```
 
 ### Verifying GPU access
@@ -323,7 +327,7 @@ print(torch.cuda.memory_allocated() / 1e9, "GB")
 
 ### For H100 cluster jobs
 
-See [Using the H100 Cluster](#using-the-h100-cluster) below. Do not run cluster jobs for experiments that fit on a local GPU — save the H100s for things that actually need them.
+See [Using the H100 Cluster](#using-the-h100-cluster) below, or [COMPUTE.md](COMPUTE.md) for the full guide. Do not run cluster jobs for experiments that fit on a local GPU — save the H100s for things that actually need them.
 
 ---
 
@@ -351,9 +355,8 @@ A minimal SLURM script for the cluster:
 #SBATCH --output=logs/%j.out
 
 source ~/.bashrc
-conda activate readinggroup
-
-python implementations/your-name/week09_flashattn_benchmark.py \
+# if using uv on the cluster:
+uv run python implementations/your-name/week09_flashattn_benchmark.py \
   --batch_size 8 \
   --seq_len 4096 \
   --max_steps 500

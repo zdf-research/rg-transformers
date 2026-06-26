@@ -18,7 +18,7 @@ implementations/
 
 ## Your folder README
 
-Update `implementations/your-name/README.md` each week with what you built, any architectural choices that differ from the baseline, your current validation loss, and one thing you found surprising. By Week 12 this is your project write-up, mostly already written.
+Update `implementations/your-name/README.md` each week with what you built, any architectural choices that differ from the baseline, your current primary metric, and one thing you found surprising. By Week 13 this is your project write-up, mostly already written.
 
 Minimum useful format:
 
@@ -46,7 +46,7 @@ Consistent naming makes the folder readable as a chronological project when some
 
 ## Pushing
 
-Commit directly to your personal branch `member/your-name`. No PR needed for your own folder.
+Commit to your personal branch `member/your-name`. No approval needed for your own folder.
 
 ```bash
 git add implementations/your-name/week03_attention.py
@@ -54,4 +54,4 @@ git commit -m "week03: single-head causal attention, passes sanity check"
 git push origin member/your-name
 ```
 
-See [`CONTRIBUTING.md`](../CONTRIBUTING.md) for the full workflow.
+When you want to merge a weekly winner into `main`, open a Pull Request. See [`CONTRIBUTING.md`](../CONTRIBUTING.md) for the full workflow.

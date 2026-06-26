@@ -10,7 +10,7 @@ Shared infrastructure that every member's implementation depends on. Treat this 
 | `data.py`          | Dataset loading for TinyShakespeare and the fixed WikiText-103 held-out split                                                                                        |
 | `eval.py`          | **The leaderboard script.** Computes validation cross-entropy on the fixed eval split. Do not modify without group consensus — changes invalidate historical entries |
 | `train.py`         | Reference training loop. Not authoritative — use it as a starting point or ignore it entirely                                                                        |
-| `requirements.txt` | Pinned dependencies. If you need to add a package, open an issue first                                                                                               |
+| `pyproject.toml`   | Project metadata and dependencies (managed with `uv`). If you need to add a package, open an issue first                                                            |
 
 ## Rules
 
