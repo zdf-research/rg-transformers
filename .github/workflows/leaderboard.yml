@@ -1,0 +1,53 @@
+name: Weekly Leaderboard Evaluation
+
+on:
+  schedule:
+    # Runs at 12:00 UTC every Friday
+    - cron: '0 12 * * 5'
+  workflow_dispatch: # Allows you to trigger it manually via a button in the UI
+
+jobs:
+  evaluate-and-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to allow the bot to commit to LEADERBOARD.md
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
+
+      - name: Install dependencies
+        run: |
+          # We install pytest and the json-report plugin for metrics
+          uv pip install pytest pytest-json-report --system
+
+      - name: Run Evaluations
+        run: |
+          # Scaffold: We will eventually write a small python script here that loops
+          # over implementations/* and runs pytest for each member, collecting the JSONs.
+          # Example:
+          # MEMBER_NAME=alice pytest common/eval/week01_tokenizer.py --json-report --json-report-file=alice_results.json
+          echo "Running evaluations..."
+
+      - name: Update Leaderboard
+        run: |
+          # Scaffold: Script to read the JSONs and rewrite LEADERBOARD.md
+          # python common/eval/update_leaderboard.py
+          echo "Updating leaderboard markdown..."
+
+      - name: Commit and Push Leaderboard
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add LEADERBOARD.md
+          
+          # Only commit and push if there are actually changes to the leaderboard
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update weekly leaderboard" && git push)
