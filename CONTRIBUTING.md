@@ -31,7 +31,7 @@ rg-transformers/
 ├── common/                          ← shared utilities (protected, PR required)
 │   ├── tokenizer.py                 ← character-level and BPE tokenisers
 │   ├── data.py                      ← dataset loading (TinyShakespeare, WikiText)
-│   ├── eval.py                      ← evaluation script — do not modify without a PR
+│   ├── eval/                        ← pytest evaluation scripts — do not modify without a PR
 │   ├── train.py                     ← reference training loop
 │   └── pyproject.toml               ← project metadata and pinned dependencies (managed with uv)
 │
@@ -92,7 +92,7 @@ See [Environment Setup](#environment-setup) for conda/venv instructions and GPU 
 ### 4. Verify common utilities work
 
 ```bash
-python common/eval.py --help
+pytest common/eval/ --help
 python -c "from common.data import load_tinshakespeare; print('ok')"
 ```
 
@@ -186,10 +186,10 @@ Optionally add a `notes.md` with links, extended derivations, or things you want
 
 `common/` contains the shared infrastructure everyone's implementation depends on. Changes here can break everyone's code simultaneously, which is annoying. So:
 
-- **Read before you use.** Skim `common/eval.py` and `common/data.py` before Week 1 so you know what they do.
+- **Read before you use.** Skim `common/eval/` and `common/data.py` before Week 1 so you know what they do.
 - **Do not modify `common/` directly.** All changes go through a pull request with at least one approval from another group member.
 - **If something is broken or missing, open an issue first.** Describe what you need. Someone else may already have a fix.
-- **The eval script is sacred.** `common/eval.py` defines the leaderboard metric. Changes to it invalidate all historical leaderboard entries. Treat it like production code.
+- **The eval scripts are sacred.** The tests in `common/eval/` define the leaderboard metrics. Changes to them invalidate all historical leaderboard entries. Treat them like production code.
 
 ### Proposing a change to common/
 
@@ -212,11 +212,8 @@ The leaderboard lives in `LEADERBOARD.md` and is updated after each session. Eac
 ### Running the eval
 
 ```bash
-# Example for Week 6 (validation loss is the metric)
-python common/eval.py \
-  --checkpoint implementations/your-name/checkpoints/week06_final.pt \
-  --name "your-name" \
-  --week 6
+# Example for Week 1 (tokenizer compression and parity)
+MEMBER_NAME="your-name" pytest common/eval/week01_tokenizer.py -v
 ```
 
 This prints your metrics. Hand the output to whoever is maintaining the board that week, or open a PR against `LEADERBOARD.md`.
@@ -296,7 +293,7 @@ All changes to `main` go through a Pull Request. This includes weekly winner mer
 - [ ] Include a minimal test or usage example showing it works
 - [ ] Tag at least one other group member as reviewer
 - [ ] Do not merge your own PR — wait for one approval
-- [ ] If the change touches `eval.py`, tag everyone and wait for group consensus
+- [ ] If the change touches scripts in `eval/`, tag everyone and wait for group consensus
 
 ### Review expectations
 
