@@ -46,13 +46,13 @@ https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ
 
 **Core references:**
 - Karpathy, _makemore Part 1_ — bigram model and the embedding lookup table (video, ~1 hr): https://youtu.be/PaCmpygFfXo
-- Jurafsky & Martin, _Speech and Language Processing_, Ch. 6 — Vector Semantics and Embeddings (free): https://web.stanford.edu/~jurafsky/slp3/
+- Jurafsky & Martin, _Speech and Language Processing_, Ch.s 2 - 5 — Vector Semantics and Embeddings (free): https://web.stanford.edu/~jurafsky/slp3/
 
 **Deeper / optional:**
 - Mikolov et al. (2013), _Efficient Estimation of Word Representations in Vector Space_: https://arxiv.org/abs/1301.3781
 - CS224n Lecture 1 slides (Stanford): http://web.stanford.edu/class/cs224n/
 
-**Code milestone:** Build a character-level tokenizer and embedding lookup layer. Then plug in the shared BPE tokenizer (GPT-2 style, ~8k vocab) and confirm your embedding layer handles the larger vocabulary.
+**Code milestone:** Build a character-level tokenizer and embedding lookup layer. Then build a BPE tokenizer (GPT-2 style, ~8k vocab) and confirm your embedding layer handles the larger vocabulary.
 
 > **Note:** The shared BPE tokenizer will be the standard for all leaderboard evaluation from Week 4 onwards. Character-level and BPE losses are not comparable, so we fix the token space early.
 
