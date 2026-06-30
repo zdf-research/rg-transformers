@@ -40,7 +40,8 @@ https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ
 
 ---
 
-### Week 1 — Embeddings & Tokenization
+<details>
+<summary><h3>Week 1 — Embeddings & Tokenization</h3></summary>
 
 **The question:** How does a model represent meaning as a vector?
 
@@ -61,13 +62,49 @@ https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ
 - Encode/decode parity: does `decode(encode(text)) == text` hold on a held-out corpus?
 - Embedding lookup speed (forward pass time on a batch)
 
+
+**Code snippet (Protocol usage):**
+```python
+from common.tokenizer import Tokenizer
+
+class MyBPETokenizer:
+    def __init__(self):
+        self._vocab_size = 0
+        # ...
+
+    @property
+    def vocab_size(self) -> int:
+        return self._vocab_size
+
+    def train(self, text: str, vocab_size: int, **kwargs) -> None:
+        pass
+        
+    def encode(self, text: str) -> list[int]:
+        return []
+        
+    def decode(self, ids: list[int]) -> str:
+        return ""
+        
+    def save(self, filepath: str) -> None:
+        pass
+        
+    def load(self, filepath: str) -> None:
+        pass
+
+# Type-checker will yell if MyBPETokenizer doesn't implement Tokenizer!
+tokenizer: Tokenizer = MyBPETokenizer()
+```
+
 **Discussion anchor:** Why a lookup table rather than one-hot vectors fed into a linear layer? Are they mathematically equivalent? Why does switching from character-level to BPE change the effective context window so dramatically?
 
 **Extra credit:** Implement byte-fallback BPE so the tokenizer never produces `<unk>`.
 
+</details>
+
 ---
 
-### Week 2 — Gradients, Autograd & Why Recurrence Breaks
+<details>
+<summary><h3>Week 2 — Gradients, Autograd & Why Recurrence Breaks</h3></summary>
 
 **The question:** What does backpropagation actually look like through a sequence model, and why does it break for long sequences?
 
@@ -93,9 +130,12 @@ https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ
 
 **Extra credit:** Pick one weight matrix and compute its gradient by hand using the chain rule. Compare your result to autograd’s `.grad`. If they match within `1e-6`, you have understood backprop.
 
+</details>
+
 ---
 
-### Week 3 — Scaled Dot-Product Attention
+<details>
+<summary><h3>Week 3 — Scaled Dot-Product Attention</h3></summary>
 
 **The question:** How does attention allow every token to directly query every other token, and why does it need a scaling factor?
 
@@ -118,9 +158,12 @@ https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ
 
 **Extra credit:** Implement the attention pattern as a heatmap visualisation on a short sentence. What do you notice about the diagonal and the early tokens?
 
+</details>
+
 ---
 
-### Week 4 — Multi-Head Attention & the Transformer Block
+<details>
+<summary><h3>Week 4 — Multi-Head Attention & the Transformer Block</h3></summary>
 
 **The question:** What does each head learn, and how do you stack these blocks stably?
 
@@ -144,9 +187,12 @@ https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ
 
 **Extra credit:** Visualise attention weights for each head on the same sentence. Do different heads attend to different syntactic patterns?
 
+</details>
+
 ---
 
-### Week 5 — Feed-Forward Networks & Activations
+<details>
+<summary><h3>Week 5 — Feed-Forward Networks & Activations</h3></summary>
 
 **The question:** What is the FFN block actually doing, and why do modern models use gated activations?
 
@@ -172,9 +218,12 @@ https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ
 
 **Extra credit:** Ablate the FFN entirely — replace it with a single linear layer. How much does loss degrade?
 
+</details>
+
 ---
 
-### Week 6 — Positional Encodings & Full nanoGPT
+<details>
+<summary><h3>Week 6 — Positional Encodings & Full nanoGPT</h3></summary>
 
 **The question:** Self-attention is permutation-invariant — so how do we tell the model where each token is?
 
@@ -198,9 +247,12 @@ https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ
 
 **Extra credit:** Implement sinusoidal (fixed) position encodings instead of learned. Do you observe a difference in convergence speed?
 
+</details>
+
 ---
 
-### 🎉 Demo Day — After Week 6
+<details>
+<summary><h3>🎉 Demo Day — After Week 6</h3></summary>
 
 Each participant:
 
@@ -210,13 +262,16 @@ Each participant:
 
 Checkpoint the leaderboard. Celebrate. Then continue.
 
+</details>
+
 ---
 
 ## Phase 2 — Understand & Optimise It
 
 ---
 
-### Week 7 — Rotary Position Embeddings (RoPE)
+<details>
+<summary><h3>Week 7 — Rotary Position Embeddings (RoPE)</h3></summary>
 
 **The question:** Can we encode position in the attention scores themselves, so it naturally generalises to longer sequences?
 
@@ -239,9 +294,12 @@ Checkpoint the leaderboard. Celebrate. Then continue.
 
 **Extra credit:** Implement RoPE with xPos scaling (used in extensions like Yarn). Does it improve extrapolation beyond 2×?
 
+</details>
+
 ---
 
-### Week 8 — GQA, KV Cache & torch.compile
+<details>
+<summary><h3>Week 8 — GQA, KV Cache & torch.compile</h3></summary>
 
 **The question:** During inference, why does memory bandwidth become the bottleneck, and how does GQA fix it?
 
@@ -272,9 +330,12 @@ Fix any breaks caused by Python control flow, lists-instead-of-tensors in the ca
 
 **Extra credit:** Implement speculative decoding: use a 2-layer draft model to propose tokens, verified in parallel by your main model. Measure end-to-end speedup.
 
+</details>
+
 ---
 
-### Week 9 — FlashAttention
+<details>
+<summary><h3>Week 9 — FlashAttention</h3></summary>
 
 **The question:** Why is standard attention memory-bound rather than compute-bound, and how does tiling fix it?
 
@@ -298,9 +359,12 @@ Fix any breaks caused by Python control flow, lists-instead-of-tensors in the ca
 
 **Extra credit:** Profile your model with the PyTorch profiler. Where does time go *after* FlashAttention removes attention as the bottleneck?
 
+</details>
+
 ---
 
-### Week 10 — Mixed Precision Training
+<details>
+<summary><h3>Week 10 — Mixed Precision Training</h3></summary>
 
 **The question:** How do you train stably in half precision?
 
@@ -324,9 +388,12 @@ Fix any breaks caused by Python control flow, lists-instead-of-tensors in the ca
 
 **Extra credit:** Train the same model in FP32, BF16, and (if you can stably) FP16. Plot all three loss curves on the same axes.
 
+</details>
+
 ---
 
-### Week 11 — Distributed Training & Cluster Infra
+<details>
+<summary><h3>Week 11 — Distributed Training & Cluster Infra</h3></summary>
 
 **The question:** What does it take to run on multiple GPUs, and how do you actually submit jobs to the cluster?
 
@@ -349,9 +416,12 @@ Fix any breaks caused by Python control flow, lists-instead-of-tensors in the ca
 
 **Extra credit:** Profile a ZeRO-1 or FSDP setup. How much memory does offloading optimizer states to CPU save?
 
+</details>
+
 ---
 
-### Week 12 — Generation Strategies & Group Project Merge
+<details>
+<summary><h3>Week 12 — Generation Strategies & Group Project Merge</h3></summary>
 
 **The question:** How do you know if your model is actually good, and how do we merge 13 weeks of work into one system?
 
@@ -375,9 +445,12 @@ Fix any breaks caused by Python control flow, lists-instead-of-tensors in the ca
 
 **Extra credit:** Implement repetition penalty or frequency-based sampling. Does it improve perceived quality?
 
+</details>
+
 ---
 
-### Week 13 — Final Integration, Demo Day & Aperitivo
+<details>
+<summary><h3>Week 13 — Final Integration, Demo Day & Aperitivo</h3></summary>
 
 **The question:** What did we build?
 
@@ -398,6 +471,8 @@ Fix any breaks caused by Python control flow, lists-instead-of-tensors in the ca
 Then: **aperitivo**. You have earned it.
 
 Optionally: write up a shared group blog post or technical report. This is the CV artefact.
+
+</details>
 
 ---
 
